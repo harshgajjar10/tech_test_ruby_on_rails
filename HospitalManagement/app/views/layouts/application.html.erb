@@ -11,6 +11,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <% unless user_signed_in? %>
+      <%= yield %>
+    <% end %>
+    <% if user_signed_in? %>
+      <%= render 'layouts/header' %>
+      <%= render 'layouts/flash_message' %>
+      <div class="container">  
+        <%= yield %>
+      </div>
+    <% end %>
   </body>
 </html>

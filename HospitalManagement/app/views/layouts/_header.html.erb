@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand">HMS</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <%= link_to 'Home', root_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'History Appointments', appointments_path(history: true), class: "nav-link" %>
+        </li>
+        <% if doctor_signed_in? %>
+          <li class="nav-item">
+            <% if current_user.doctor_info&.persisted? %>
+              <%= link_to 'Profile', edit_doctor_info_path(current_user.doctor_info), class: 'nav-link'  %>
+            <% else %>
+              <%= link_to 'Profile', new_doctor_info_path, class: 'nav-link' %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <b><%= current_user.full_name %></b>&nbsp
+    <%= button_to 'Logout', destroy_user_session_path, method: :delete, 'data-turbo': false, class: 'btn btn-danger' %>
+  </div>
+</nav>

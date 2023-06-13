@@ -1,0 +1,66 @@
+<h2> Book Appointment </h2>
+<br/><br/>
+<%= form_with url: appointments_path, method: :post do |f| %>
+  <div class="mb-3 row">
+    <%= f.label :doctor_id, class: "col-sm-2 col-form-label" %>
+    <div class="col-sm-5">
+      <%= f.select :doctor_id, User.with_role(:doctor).pluck(:full_name, :id), {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <%= f.label :appointment_date, class: "col-sm-2 col-form-label" %>
+    <div class="col-sm-5">
+      <%= f.date_field :appointment_date, min: Date.today, max: Date.today + 7 , class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <%= f.label :slot, class: "col-sm-2 col-form-label" %>
+    <div class="col-sm-5">
+      <%= f.select :slot, ["Time Slots"], {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <%= f.hidden_field :start_at, value: '' %>
+  <%= f.hidden_field :end_at, value: '' %>
+
+  <%= f.submit class: 'btn btn-primary' %>
+<% end %>
+
+<script type="module">
+  $(document).ready(function(){
+    $("#doctor_id, #appointment_date").change(function() {
+      if($('#doctor_id').val() != '' && $('#appointment_date').val() != ''){
+        $.ajax({
+          url: '/appointments/get_time_slots',
+          type: 'GET',
+          dataType: 'script',
+          data: {
+            doctor_id: $('#doctor_id').val(),
+            appointment_date: $('#appointment_date').val()
+          },
+          success: function(data){
+            var response = JSON.parse(data)
+            if(response["time_slots"] == null ){
+              $('#slot').empty().append("<option value=''>No Slots available</option>")
+            }else{
+              $('#slot').empty().append(response["time_slots"].flatMap((x) => "<option value='" + x + "'>" + x + "</option>"))
+              var time_slot = $.map(response["time_slots"][0].split("-"), $.trim);
+              $('#start_at').val(time_slot[0]);
+              $('#end_at').val(time_slot[1]);
+            }
+          },
+        });
+      }
+    });
+
+    $('#slot').change(function() {
+      if($(this).val() != ''){
+        var time_slot = $.map($('#slot').val().split("-"), $.trim);
+        $('#start_at').val(time_slot[0]);
+        $('#end_at').val(time_slot[1]);
+      } 
+    });
+  });
+</script>

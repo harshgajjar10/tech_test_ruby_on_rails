@@ -1,24 +1,34 @@
-# README
+## Project setup
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Install below ruby version:
 
-Things you may want to cover:
+```sh
+ruby-3.1.0
+```
 
-* Ruby version
+Using rails version : 
+```sh
+Rails 7.0.4.3
+```
 
-* System dependencies
+Database :
+```sh
+PostgreSQL
+```
 
-* Configuration
+Hit below command in terminal to create gemset and install all gems:
 
-* Database creation
+```sh
+$ cd .
+$ bundle install
+```
 
-* Database initialization
+Hit below command in terminal for Creating database, executing all migration and run seed file:
+```sh
+$ rails db:setup
+```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Now turn on the server:
+```sh
+$ rails s
+```

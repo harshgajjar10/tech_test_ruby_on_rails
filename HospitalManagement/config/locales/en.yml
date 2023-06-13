@@ -31,3 +31,11 @@
 
 en:
   hello: "Hello world"
+  appointment:
+    end_time_smaller: "End Time can't be same or lesser than Start Time"
+    doctor_unavailable: "Doctor has another appointment, please try another slot or change the doctor"
+    user_unavailable: 'You are having another appointment for the same slot, please select anothet date or slots'
+    seven_days_prior_only: 'You can only book appointment upto %{upto_date} only'
+    future_date_only: 'You can only select future date only'
+    slot_must_be_hour: 'You can select one hour slot only'
+    doctor_not_available: 'Selected Dotor is not available for selected date and time'

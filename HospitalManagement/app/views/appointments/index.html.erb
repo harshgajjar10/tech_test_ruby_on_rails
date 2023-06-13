@@ -1,0 +1,53 @@
+<br/>
+<h2><%= params[:history] == 'true' ? 'History Appointments' : 'Upcoming Appointments' %></h2>
+<% if patient_signed_in? %>
+  <br/>
+  <%= link_to 'Book Appointment', new_appointment_path, class: 'btn border-primary' %>
+<% end %>
+<br/>
+<br/>
+<table class="table table-bordered border-primary">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Appointment Date</th>
+      <% if patient_signed_in? %>
+        <th>Doctor Name</th>
+      <% else %>
+        <th>Patient Name</th>
+      <% end %>
+      <th>Start At</th>
+      <th>End At</th>
+      <% if doctor_signed_in? && params[:history] != 'true' %>
+        <th>Doctor Status</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @appointments.present? %>
+      <% @appointments.each_with_index do |appointment, index| %>
+        <tr>
+          <td><%= index + 1 %>
+          <td><%= appointment.appointment_date.strftime("%d/%m/%Y") %></td>
+          <% if patient_signed_in? %>
+            <td><%= appointment.doctor.full_name %></td>
+          <% else %>
+            <td><%= appointment.user.full_name %></td>
+          <% end %>
+          <td><%= appointment.start_at.strftime("%H:%M") %></td>
+          <td><%= appointment.end_at.strftime("%H:%M") %></td>
+          <% if doctor_signed_in? && params[:history] != 'true' %>
+            <td>
+              <% if appointment.status == Appointment.statuses.key(0) %>
+                <%= link_to 'Accept', update_status_appointment_path(id: appointment.id, status:  Appointment.statuses[:accepted]), method: :put, class: 'btn btn-success btn-sm' %>
+                <%= link_to 'Reject', update_status_appointment_path(id: appointment.id, status:  Appointment.statuses[:rejected]), method: :put, class: 'btn btn-danger btn-sm' %>
+              <% else %>
+                <%= appointment.status.titleize %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

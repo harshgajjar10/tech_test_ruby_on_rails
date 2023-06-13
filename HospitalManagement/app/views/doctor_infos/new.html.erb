@@ -1,0 +1,62 @@
+<h2>Doctor Profile</h2>
+<%= form_for @doctor_info do |doc_info| %>
+  <% if @doctor_info.errors.any? %>
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@doctor_info.errors.count, "error") %>.
+      <ul>
+        <% @doctor_info.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3 row">
+    <%= doc_info.label :specialities, class: "col-sm-2 col-form-label" %>
+    <div class="col-sm-5">
+      <%= doc_info.text_field :specialities, class: "form-control" %>
+    </div>
+  </div>
+  
+  <div class="mb-3 row">
+    <%= doc_info.label :doctor_type, class: "col-sm-2 col-form-label" %>
+    <div class="col-sm-5">
+      <%= doc_info.select :doctor_type, DOCTOR_TYPE, {}, class: "form-control" %>
+    </div>
+  </div>
+  <br/><br/>
+  <h3>Weekly Availability</h3>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>WeekDay</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% WEEKDAYS.each_with_index do |day, index| %>
+        <%= doc_info.fields_for :doctor_timings, doc_info.object.doctor_timings.find_or_initialize_by(weekday: day[:value]) do |timing| %>
+          <tr>
+            <td>
+              <%= timing.hidden_field :weekday %>
+              <div class="checkbox">
+                <%= timing.check_box :_destroy, {checked: timing.object.persisted?}, "0", "1" %>
+                <%= timing.label :_destroy, day[:label] %>
+              </div>
+            </td>
+            <td>
+              <%= timing.time_select :start_time, {prompt: {}, minute_step: 60}, class: "form-control-sm" %>
+            </td>
+            <td>
+              <%= timing.time_select :end_time, {prompt: {}, minute_step: 60}, class: "form-control-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= doc_info.submit "Save", class: 'btn btn-primary' %>
+<% end %>
+    
